@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="siteTitle">Intranet - Controle de Provas</title>
+    <style>
+        :root {
+            --color-primary: #2196F3;
+            --color-success: #4CAF50;
+            --color-warning: #FFC107;
+            --color-danger: #F44336;
+            --color-applied: #9E9E9E;
+            --color-bg: #f5f5f5;
+            --color-white: #ffffff;
+            --color-text: #333;
+            --color-border: #ddd;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+        }
+        header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1976D2 100%);
+            color: var(--color-white);
+            padding: 30px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+        }
+        #instLogo {
+            max-height: 60px;
+            vertical-align: middle;
+        }
+        .config-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #FFC107;
+            color: #333;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .config-btn:hover { background: #ffa726; }
+        .modal-config {
+            display: none;
+            position: fixed; top:0; left:0; right:0; bottom:0;
+            background: rgba(0,0,0,0.5); z-index: 9999;
+            justify-content: center; align-items: center;
+        }
+        .modal-config.active { display: flex; }
+        .modal-content-config {
+            background: #fff; padding: 35px 30px; border-radius: 10px;
+            width: 350px; box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+        }
+        .modal-content-config label { font-weight: 600; margin-top: 14px; display: block; }
+        .modal-content-config input, .modal-content-config select {
+            margin-bottom: 10px; width: 100%;
+            padding: 8px; border-radius: 5px; border:1px solid #ccc;
+        }
+        .modal-content-config .modal-buttons { margin-top: 20px; text-align: right; }
+        .modal-content-config .modal-buttons button {
+            margin-left: 10px; padding: 8px 16px; border-radius: 5px; border:none;
+        }
+        #logoPreview { max-width: 100px; max-height: 60px; margin-top: 6px; }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="" id="instLogo" alt="" style="display:none;">
+        <h1 id="headerTitle">📋 Controle de Provas</h1>
+        <p id="headerSubtitle">Intranet de Gestão de Avaliações</p>
+        <button class="config-btn" onclick="openConfigModal()">⚙ Configurar</button>
+    </header>
+    <div class="container">
+        <!-- conteúdo permanece conforme estrutura original -->
+        <!-- ... -->
+    </div>
+
+    <!-- Modal de configuração -->
+    <div class="modal-config" id="configModal">
+        <div class="modal-content-config">
+            <label for="confTitle">Título:</label>
+            <input type="text" id="confTitle" value="📋 Controle de Provas">
+            <label for="confSubtitle">Subtítulo:</label>
+            <input type="text" id="confSubtitle" value="Intranet de Gestão de Avaliações">
+            <label for="confPrimary">Cor principal:</label>
+            <input type="color" id="confPrimary" value="#2196F3">
+            <label for="confCursos">Cursos <span style="font-weight:400">(separar por vírgulas)</span>:</label>
+            <input type="text" id="confCursos" value="Psicologia, Gestão, Administração">
+            <label for="confLogo">Logo Institucional:</label>
+            <input type="file" id="confLogo" accept="image/*" onchange="previewLogo(event)">
+            <img id="logoPreview" src="" style="display:none;">
+            <div class="modal-buttons">
+                <button onclick="closeConfigModal()">Cancelar</button>
+                <button onclick="saveConfig()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openConfigModal() {
+            document.getElementById("configModal").classList.add("active");
+        }
+        function closeConfigModal() {
+            document.getElementById("configModal").classList.remove("active");
+        }
+        function previewLogo(event) {
+            const file = event.target.files[0];
+            const preview = document.getElementById("logoPreview");
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        function saveConfig() {
+            // Título
+            let title = document.getElementById("confTitle").value;
+            document.getElementById("headerTitle").textContent = title;
+            document.title = title;
+            // Subtítulo
+            document.getElementById("headerSubtitle").textContent =
+                document.getElementById("confSubtitle").value;
+            // Cor Principal
+            let color = document.getElementById("confPrimary").value;
+            document.documentElement.style.setProperty('--color-primary', color);
+            // Logo
+            let logoSrc = document.getElementById("logoPreview").src;
+            let instLogo = document.getElementById("instLogo");
+            if (logoSrc && logoSrc !== window.location.href) {
+                instLogo.src = logoSrc;
+                instLogo.style.display = "inline";
+            }
+            // Cursos (opcional, aqui só salva para uso futuro, ex: filtro)
+            window.siteCursos = document.getElementById("confCursos").value.split(',');
+            closeConfigModal();
+        }
+    </script>
+    <!-- Scripts do sistema permanecem conforme original -->
+</body>
+</html>
