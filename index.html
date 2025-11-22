@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Intranet - Controle de Provas</title>
     <style>
         * {
@@ -12,6 +12,7 @@
         }
 
         :root {
+            /* valores iniciais - podem ser alterados no modal de configurações */
             --color-primary: #2196F3;
             --color-success: #4CAF50;
             --color-warning: #FFC107;
@@ -30,21 +31,52 @@
         }
 
         header {
-            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            background: linear-gradient(135deg, var(--color-primary) 0%, #1976D2 100%);
             color: var(--color-white);
-            padding: 30px 20px;
+            padding: 20px 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             text-align: center;
+            position: relative;
         }
 
         header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 2.2em;
+            margin-bottom: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
         header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+            font-size: 1em;
+            opacity: 0.95;
+        }
+
+        /* Top-right controls (logo + config) */
+        .header-controls {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .logo-preview {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
         }
 
         .container {
@@ -90,21 +122,20 @@
         }
 
         button {
-            padding: 12px 25px;
+            padding: 12px 18px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 1em;
             font-weight: 600;
-            transition: all 0.3s;
+            transition: all 0.2s;
             background-color: var(--color-primary);
             color: var(--color-white);
         }
 
         button:hover {
-            background-color: #1976D2;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
         }
 
         button.secondary {
@@ -126,7 +157,7 @@
             background: var(--color-white);
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             text-align: center;
             border-left: 4px solid var(--color-primary);
         }
@@ -145,13 +176,13 @@
 
         .stat-card h3 {
             color: #666;
-            font-size: 0.9em;
+            font-size: 0.85em;
             margin-bottom: 10px;
             text-transform: uppercase;
         }
 
         .stat-card .number {
-            font-size: 2.5em;
+            font-size: 2.2em;
             font-weight: bold;
             color: var(--color-primary);
         }
@@ -171,7 +202,7 @@
         .table-wrapper {
             background: var(--color-white);
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             overflow: hidden;
         }
 
@@ -186,20 +217,21 @@
         }
 
         th {
-            padding: 18px 15px;
+            padding: 14px 15px;
             text-align: left;
             font-weight: 600;
             font-size: 0.95em;
         }
 
         td {
-            padding: 15px;
+            padding: 12px 15px;
             border-bottom: 1px solid var(--color-border);
         }
 
         tbody tr:hover {
             background-color: #f9f9f9;
-            transition: background-color 0.2s;
+            transition: background-color 0.15s;
+            cursor: pointer;
         }
 
         tbody tr:last-child td {
@@ -208,15 +240,15 @@
 
         .status-badge {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.85em;
             text-align: center;
-            width: 120px;
+            min-width: 100px;
         }
 
-        .status-applied {
+        .status-aplicada {
             background-color: #E0E0E0;
             color: #424242;
         }
@@ -226,22 +258,30 @@
             color: #1565C0;
         }
 
-        .status-warning {
-            background-color: #FFF3E0;
-            color: #E65100;
+        .status-hoje {
+            background-color: #BBDEFB;
+            color: #0D47A1;
         }
 
-        .status-danger {
+        .status-urgente {
             background-color: #FFEBEE;
             color: #C62828;
         }
 
+        .status-proximo {
+            background-color: #FFF3E0;
+            color: #E65100;
+        }
+
         .days-badge {
             font-weight: 700;
-            padding: 5px 10px;
+            padding: 6px 10px;
             border-radius: 4px;
             background-color: #F5F5F5;
             color: #333;
+            display: inline-block;
+            min-width: 70px;
+            text-align: center;
         }
 
         .days-badge.red {
@@ -268,7 +308,7 @@
             text-align: center;
             padding: 40px 20px;
             color: #999;
-            font-size: 1.1em;
+            font-size: 1.05em;
         }
 
         .modal {
@@ -278,10 +318,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.45);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .modal.active {
@@ -290,34 +331,34 @@
 
         .modal-content {
             background: var(--color-white);
-            padding: 30px;
+            padding: 22px;
             border-radius: 8px;
-            max-width: 600px;
-            width: 90%;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+            max-width: 720px;
+            width: 100%;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.25);
         }
 
         .modal-header {
-            font-size: 1.5em;
+            font-size: 1.25em;
             font-weight: bold;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
             color: var(--color-primary);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 600;
             color: #555;
         }
 
         input, textarea, select {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid var(--color-border);
             border-radius: 6px;
             font-size: 1em;
@@ -326,19 +367,19 @@
 
         textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 80px;
         }
 
         .modal-buttons {
             display: flex;
             gap: 10px;
             justify-content: flex-end;
-            margin-top: 30px;
+            margin-top: 18px;
         }
 
         .modal-buttons button {
             flex: 1;
-            max-width: 150px;
+            max-width: 160px;
         }
 
         .modal-buttons button.cancel {
@@ -361,7 +402,7 @@
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .filter-section select {
@@ -369,10 +410,13 @@
             min-width: 150px;
         }
 
+        /* small screens */
         @media (max-width: 768px) {
             header h1 {
-                font-size: 1.8em;
+                font-size: 1.4em;
             }
+
+            header p { font-size: 0.9em; }
 
             .controls {
                 flex-direction: column;
@@ -387,20 +431,32 @@
             }
 
             th, td {
-                padding: 10px;
+                padding: 8px;
             }
 
             .status-badge, .days-badge {
-                width: 100px;
+                min-width: 86px;
                 font-size: 0.8em;
             }
+
+            .header-controls { top: 8px; right: 8px; gap: 6px; }
+            .logo-preview { width: 40px; height: 40px; }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>📋 Controle de Provas</h1>
-        <p>Intranet de Gestão de Avaliações</p>
+        <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
+            <h1 id="mainTitle">📋 Controle de Provas</h1>
+        </div>
+        <p id="subTitle">Intranet de Gestão de Avaliações</p>
+
+        <div class="header-controls">
+            <div class="logo-preview" id="logoPreview" title="Logo da instituição (clique para ver)">
+                <!-- logo será inserida dinamicamente -->
+            </div>
+            <button onclick="openConfig()" title="Configurações">⚙️</button>
+        </div>
     </header>
 
     <div class="container">
@@ -465,8 +521,8 @@
     </div>
 
     <!-- Modal de Adicionar/Editar -->
-    <div class="modal" id="formModal">
-        <div class="modal-content">
+    <div class="modal" id="formModal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-labelledby="formTitle">
             <div class="modal-header" id="formTitle">Adicionar Nova Prova</div>
             <form id="provaForm">
                 <div class="form-group">
@@ -493,8 +549,68 @@
         </div>
     </div>
 
+    <!-- Modal de Configurações -->
+    <div class="modal" id="configModal" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-labelledby="configTitle">
+            <div class="modal-header" id="configTitle">Configurações</div>
+            <form id="configForm">
+                <div class="form-group">
+                    <label for="configTitleInput">Título (ex.: Controle de Provas):</label>
+                    <input type="text" id="configTitleInput">
+                </div>
+                <div class="form-group">
+                    <label for="configSubtitleInput">Subtítulo:</label>
+                    <input type="text" id="configSubtitleInput">
+                </div>
+
+                <div class="form-group">
+                    <label for="colorPrimary">Cor principal (HEX):</label>
+                    <input type="text" id="colorPrimary" placeholder="#2196F3">
+                </div>
+
+                <div class="form-group">
+                    <label for="colorBg">Cor de fundo (HEX):</label>
+                    <input type="text" id="colorBg" placeholder="#f5f5f5">
+                </div>
+
+                <div class="form-group">
+                    <label for="logoUpload">Logo da instituição (PNG/JPG) — será salva localmente no navegador:</label>
+                    <input type="file" id="logoUpload" accept="image/*">
+                    <div style="margin-top:10px; display:flex; gap:10px; align-items:center;">
+                        <div style="width:80px; height:80px; border:1px solid var(--color-border); border-radius:6px; overflow:hidden; display:flex; align-items:center; justify-content:center;" id="logoPreviewBig"></div>
+                        <div>
+                            <button type="button" onclick="removeLogo()" class="secondary">Remover logo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="cancel" onclick="closeConfig()">Cancelar</button>
+                    <button type="submit">Salvar Configurações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Dados das provas
+        /***************************************************************
+         * Estrutura de armazenamento:
+         *  - LocalStorage keys:
+         *      - 'controleProvas_provas'  -> array de provas
+         *      - 'controleProvas_settings' -> obj {title, subtitle, logoDataUrl, colors...}
+         ***************************************************************/
+
+        // Função utilitária para parsear datas no formato YYYY-MM-DD sem shift de fuso horário
+        function parseDateYMD(dateStr) {
+            if (!dateStr) return null;
+            // aceita 'YYYY-MM-DD' (como nas entradas)
+            const parts = String(dateStr).split('-').map(Number);
+            if (parts.length !== 3) return new Date(dateStr);
+            const [y, m, d] = parts;
+            return new Date(y, m - 1, d);
+        }
+
+        // Dados iniciais (se existir em localStorage, eles sobrescrevem estes)
         let provas = [
             { id: 1, disciplina: "PSICOLOGIA SOCIAL", professor: "STEPHANE JULIANA PEREIRA DA SILVA DE FIGUEIREDO", data: "2025-11-18" },
             { id: 2, disciplina: "PSICOLOGIA ESCOLAR", professor: "ANNE NAYARA DE ALMEIDA ROCHA", data: "2025-11-18" },
@@ -528,15 +644,97 @@
             { id: 30, disciplina: "PSICOLOGIA DA SAÚDE", professor: "RAQUEL LIMA PEDROSA DE ALMEIDA", data: "2025-11-27" }
         ];
 
+        // Padrões de configurações
+        const defaultSettings = {
+            title: "📋 Controle de Provas",
+            subtitle: "Intranet de Gestão de Avaliações",
+            logoDataUrl: null,
+            colors: {
+                primary: getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim() || '#2196F3',
+                bg: getComputedStyle(document.documentElement).getPropertyValue('--color-bg').trim() || '#f5f5f5'
+            }
+        };
+
+        // Carregar de localStorage (provas e settings)
+        function loadFromStorage() {
+            try {
+                const savedProvas = localStorage.getItem('controleProvas_provas');
+                if (savedProvas) provas = JSON.parse(savedProvas);
+
+                const savedSettings = localStorage.getItem('controleProvas_settings');
+                if (savedSettings) {
+                    settings = JSON.parse(savedSettings);
+                } else {
+                    settings = defaultSettings;
+                }
+            } catch (e) {
+                console.error("Erro ao carregar localStorage:", e);
+                settings = defaultSettings;
+            }
+        }
+
+        // Salvar provas e settings
+        function saveProvasToStorage() {
+            localStorage.setItem('controleProvas_provas', JSON.stringify(provas));
+        }
+        function saveSettingsToStorage() {
+            localStorage.setItem('controleProvas_settings', JSON.stringify(settings));
+        }
+
+        // Estado atual
+        let settings = {};
+        loadFromStorage();
+
+        // Aplica configurações na interface (título, subtítulo, cores, logo)
+        function applySettingsToUI() {
+            document.getElementById('mainTitle').innerHTML = settings.title || defaultSettings.title;
+            document.getElementById('subTitle').textContent = settings.subtitle || defaultSettings.subtitle;
+
+            // aplica cores
+            if (settings.colors && settings.colors.primary) {
+                document.documentElement.style.setProperty('--color-primary', settings.colors.primary);
+            }
+            if (settings.colors && settings.colors.bg) {
+                document.documentElement.style.setProperty('--color-bg', settings.colors.bg);
+            }
+
+            // logo preview
+            const logoPreview = document.getElementById('logoPreview');
+            const logoBig = document.getElementById('logoPreviewBig');
+            logoPreview.innerHTML = '';
+            logoBig.innerHTML = '';
+            if (settings.logoDataUrl) {
+                const img = document.createElement('img');
+                img.src = settings.logoDataUrl;
+                img.alt = 'Logo';
+                logoPreview.appendChild(img);
+
+                const img2 = document.createElement('img');
+                img2.src = settings.logoDataUrl;
+                img2.alt = 'Logo';
+                logoBig.appendChild(img2);
+            } else {
+                // placeholder
+                logoPreview.innerHTML = `<span title="Sem logo">🏫</span>`;
+                logoBig.innerHTML = `<span style="opacity:0.6">Sem logo</span>`;
+            }
+        }
+
+        // Inicia as configurações aplicadas
+        applySettingsToUI();
+
+        // Editor / formulário
         let editingId = null;
 
+        // Cálculo de dias (corrigido para evitar shift de fuso horário)
         function calcularDias(data) {
             const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
-            const dataProva = new Date(data);
-            dataProva.setHours(0, 0, 0, 0);
+            hoje.setHours(0,0,0,0);
+            const dataProva = parseDateYMD(data);
+            dataProva.setHours(0,0,0,0);
             const diferenca = dataProva - hoje;
-            return Math.ceil(diferenca / (1000 * 60 * 60 * 24));
+            const dias = Math.round(diferenca / (1000 * 60 * 60 * 24));
+            return dias;
         }
 
         function obterStatus(dias) {
@@ -555,12 +753,13 @@
             return "";
         }
 
+        // Render da tabela (cada linha clicável para editar)
         function renderTable(dadosFiltrados = provas) {
             const tbody = document.getElementById("tableBody");
             const noResults = document.getElementById("noResults");
             tbody.innerHTML = "";
 
-            if (dadosFiltrados.length === 0) {
+            if (!dadosFiltrados || dadosFiltrados.length === 0) {
                 noResults.style.display = "block";
                 return;
             }
@@ -571,20 +770,30 @@
                 const dias = calcularDias(prova.data);
                 const status = obterStatus(dias);
                 const classeDias = obterClasseDias(dias);
-                
-                const row = document.createElement("tr");
-                row.innerHTML = `
+
+                const tr = document.createElement('tr');
+
+                // torna a linha clicável para edição
+                tr.addEventListener('dblclick', () => editProva(prova.id));
+
+                const dataFormatada = (function(dstr){
+                    const d = parseDateYMD(dstr);
+                    if (!d) return '';
+                    return d.toLocaleDateString('pt-BR');
+                })(prova.data);
+
+                tr.innerHTML = `
                     <td><strong>${prova.disciplina}</strong></td>
                     <td>${prova.professor}</td>
-                    <td>${new Date(prova.data).toLocaleDateString('pt-BR')}</td>
+                    <td>${dataFormatada}</td>
                     <td><span class="days-badge ${classeDias}">${dias} dias</span></td>
                     <td><span class="status-badge status-${status.toLowerCase()}">${status}</span></td>
                     <td>
-                        <button style="padding: 5px 10px; font-size: 0.85em; background-color: #FF9800;" onclick="editProva(${prova.id})">✏️ Editar</button>
-                        <button style="padding: 5px 10px; font-size: 0.85em; background-color: #f44336;" onclick="deleteProva(${prova.id})">🗑️ Deletar</button>
+                        <button style="padding:5px 10px; font-size:0.85em; background-color:#FF9800; color:#fff; margin-right:6px;" onclick="editProva(${prova.id})">✏️ Editar</button>
+                        <button style="padding:5px 10px; font-size:0.85em; background-color:#f44336; color:#fff;" onclick="deleteProva(${prova.id})">🗑️ Deletar</button>
                     </td>
                 `;
-                tbody.appendChild(row);
+                tbody.appendChild(tr);
             });
 
             updateStats(dadosFiltrados);
@@ -602,16 +811,17 @@
             document.getElementById("countApplied").textContent = countApplied;
         }
 
+        // Filtro de tabela
         function filterTable() {
             const search = document.getElementById("searchInput").value.toLowerCase();
             const statusFilter = document.getElementById("statusFilter").value;
 
             let filtered = provas.filter(prova => {
-                const matchSearch = prova.disciplina.toLowerCase().includes(search) || 
+                const matchSearch = prova.disciplina.toLowerCase().includes(search) ||
                                    prova.professor.toLowerCase().includes(search);
-                
+
                 if (!statusFilter) return matchSearch;
-                
+
                 const status = obterStatus(calcularDias(prova.data));
                 return matchSearch && status === statusFilter;
             });
@@ -619,13 +829,16 @@
             renderTable(filtered);
         }
 
+        // Abrir formulário para adicionar
         function openAddForm() {
             editingId = null;
             document.getElementById("formTitle").textContent = "Adicionar Nova Prova";
             document.getElementById("provaForm").reset();
             document.getElementById("formModal").classList.add("active");
+            document.getElementById("formModal").setAttribute('aria-hidden', 'false');
         }
 
+        // Editar prova
         function editProva(id) {
             const prova = provas.find(p => p.id === id);
             if (!prova) return;
@@ -635,61 +848,185 @@
             document.getElementById("disciplina").value = prova.disciplina;
             document.getElementById("professor").value = prova.professor;
             document.getElementById("dataAvaliacao").value = prova.data;
+            document.getElementById("observacoes").value = prova.observacoes || '';
             document.getElementById("formModal").classList.add("active");
+            document.getElementById("formModal").setAttribute('aria-hidden', 'false');
         }
 
+        // Deletar prova
         function deleteProva(id) {
             if (confirm("Tem certeza que deseja deletar esta prova?")) {
                 provas = provas.filter(p => p.id !== id);
+                saveProvasToStorage();
                 filterTable();
             }
         }
 
+        // Fechar formulário
         function closeForm() {
             document.getElementById("formModal").classList.remove("active");
+            document.getElementById("formModal").setAttribute('aria-hidden', 'true');
             editingId = null;
         }
 
+        // Submissão do formulário (adicionar/editar)
         document.getElementById("provaForm").addEventListener("submit", function(e) {
             e.preventDefault();
 
-            const disciplina = document.getElementById("disciplina").value;
-            const professor = document.getElementById("professor").value;
+            const disciplina = document.getElementById("disciplina").value.trim();
+            const professor = document.getElementById("professor").value.trim();
             const data = document.getElementById("dataAvaliacao").value;
+            const observacoes = document.getElementById("observacoes").value.trim();
+
+            if (!disciplina || !professor || !data) {
+                alert("Preencha disciplina, professor e data.");
+                return;
+            }
 
             if (editingId) {
                 const prova = provas.find(p => p.id === editingId);
-                prova.disciplina = disciplina;
-                prova.professor = professor;
-                prova.data = data;
+                if (prova) {
+                    prova.disciplina = disciplina;
+                    prova.professor = professor;
+                    prova.data = data;
+                    prova.observacoes = observacoes;
+                }
             } else {
                 const newId = Math.max(...provas.map(p => p.id), 0) + 1;
-                provas.push({ id: newId, disciplina, professor, data });
+                provas.push({ id: newId, disciplina, professor, data, observacoes });
             }
 
+            saveProvasToStorage();
             closeForm();
             filterTable();
         });
 
+        // Exportar CSV (todos os itens atuais)
         function exportToCSV() {
-            let csv = "Disciplina,Professor,Data da Avaliação,Dias para Avaliação,Status\n";
-            
+            let csv = "Disciplina,Professor,Data da Avaliação,Dias para Avaliação,Status,Observações\n";
+
             provas.forEach(prova => {
                 const dias = calcularDias(prova.data);
                 const status = obterStatus(dias);
-                csv += `"${prova.disciplina}","${prova.professor}","${prova.data}","${dias}","${status}"\n`;
+                const dataFormat = parseDateYMD(prova.data).toLocaleDateString('pt-BR');
+                const obs = prova.observacoes ? prova.observacoes.replace(/"/g, '""') : '';
+                csv += `"${prova.disciplina}","${prova.professor}","${dataFormat}","${dias}","${status}","${obs}"\n`;
             });
 
-            const blob = new Blob([csv], { type: "text/csv" });
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
             a.download = "controle_provas.csv";
             a.click();
+            URL.revokeObjectURL(url);
         }
 
-        // Inicializar
-        renderTable();
+        /***********************
+         * Configurações (modal)
+         ***********************/
+        function openConfig() {
+            // preencher campos com settings atuais
+            document.getElementById('configTitleInput').value = settings.title || '';
+            document.getElementById('configSubtitleInput').value = settings.subtitle || '';
+            document.getElementById('colorPrimary').value = (settings.colors && settings.colors.primary) ? settings.colors.primary : '';
+            document.getElementById('colorBg').value = (settings.colors && settings.colors.bg) ? settings.colors.bg : '';
+
+            // logo preview (já está em applySettingsToUI)
+            applySettingsToUI();
+
+            document.getElementById('configModal').classList.add('active');
+            document.getElementById('configModal').setAttribute('aria-hidden', 'false');
+        }
+
+        function closeConfig() {
+            document.getElementById('configModal').classList.remove('active');
+            document.getElementById('configModal').setAttribute('aria-hidden', 'true');
+        }
+
+        // Upload da logo
+        const logoUpload = document.getElementById('logoUpload');
+        logoUpload.addEventListener('change', function(e){
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const dataUrl = evt.target.result;
+                settings.logoDataUrl = dataUrl;
+                saveSettingsToStorage();
+                applySettingsToUI();
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function removeLogo() {
+            if (confirm('Remover a logo da instituição?')) {
+                settings.logoDataUrl = null;
+                saveSettingsToStorage();
+                applySettingsToUI();
+            }
+        }
+
+        // Salvar configurações do modal
+        document.getElementById('configForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            const title = document.getElementById('configTitleInput').value.trim();
+            const subtitle = document.getElementById('configSubtitleInput').value.trim();
+            const primary = document.getElementById('colorPrimary').value.trim();
+            const bg = document.getElementById('colorBg').value.trim();
+
+            settings.title = title || defaultSettings.title;
+            settings.subtitle = subtitle || defaultSettings.subtitle;
+            settings.colors = settings.colors || {};
+            if (primary) settings.colors.primary = primary;
+            if (bg) settings.colors.bg = bg;
+
+            saveSettingsToStorage();
+            applySettingsToUI();
+            closeConfig();
+        });
+
+        /**************************
+         * Inicialização e binding
+         **************************/
+        // Se houver provas salvas em localStorage, usar
+        (function init() {
+            // carrega provas/settings e aplica
+            loadFromStorage();
+            applySettingsToUI();
+            renderTable();
+
+            // clique no preview da logo abre modal de configurações
+            const logoPreviewEl = document.getElementById('logoPreview');
+            logoPreviewEl.addEventListener('click', openConfig);
+
+            // tornar o header título editável rapidamente (duplo clique)
+            document.getElementById('mainTitle').addEventListener('dblclick', () => {
+                openConfig();
+                setTimeout(() => {
+                    document.getElementById('configTitleInput').focus();
+                }, 200);
+            });
+
+            // salvar automaticamente quando sair da página (opcional)
+            window.addEventListener('beforeunload', () => {
+                saveProvasToStorage();
+                saveSettingsToStorage();
+            });
+        })();
+
+        // Expor algumas funções globais para o HTML (já utilizadas por botões inline)
+        window.openAddForm = openAddForm;
+        window.editProva = editProva;
+        window.deleteProva = deleteProva;
+        window.filterTable = filterTable;
+        window.exportToCSV = exportToCSV;
+        window.openConfig = openConfig;
+        window.closeConfig = closeConfig;
+        window.removeLogo = removeLogo;
+
+        // Roda filtro inicial
+        filterTable();
     </script>
 </body>
 </html>
